@@ -6,10 +6,10 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
 
-const SignInScreen = () => {
+const SignInScreen = ({navigation}) => {
   return (
     <View className="flex-1">
-      <Header title="Sign In" type="back" />
+      <Header title="Sign In" type="back" navigation />
       <View className="p-4">
         <Text className="text-xl text-neutral-600">
           Sign In to your account
@@ -50,6 +50,7 @@ const SignInScreen = () => {
             borderRadius: 30,
             backgroundColor: "rgba(111, 202, 186, 1)",
           }}
+          onPress={()=>{}}
         />
       </View>
       <View className="items-center my-3">

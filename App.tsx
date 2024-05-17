@@ -1,16 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Header from './src/components/Header';
-import SignInScreen from './src/screens/auth/SignInScreen';
-import Welcome from './src/screens/auth/Welcome';
+// In App.js in a new project
 
-export default function App() {
+import * as React from "react";
+import { View, Text } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Welcome from "./src/screens/auth/WelcomeScreen";
+import SignInScreen from "./src/screens/auth/SignInScreen";
+import type { RootStackParamList } from './src/navigation/types';
+
+
+
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function App() {
   return (
-    <View className='flex-1'>
-      <StatusBar style="auto" />
-      {/* <SignInScreen /> */}
-      <Welcome />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="WelcomeScreen"
+          component={Welcome}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignInScreen"
+          component={SignInScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
+export default App;

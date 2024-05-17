@@ -2,8 +2,12 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 import Swiper from "react-native-swiper";
 import { Button } from "@rneui/themed";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { WelcomeScreenProps } from '../../navigation/types';
 
-const Welcome = () => {
+
+
+const Welcome = ({navigation}:WelcomeScreenProps) => {
   return (
     <View className="flex-1 justify-start pt-[60px] items-center">
       <View className="my-5">
@@ -58,6 +62,9 @@ const Welcome = () => {
               buttonStyle={{
                 borderRadius: 30,
                 backgroundColor: "rgba(111, 202, 186, 1)",
+              }}
+              onPress={()=>{
+                navigation.navigate('SignInScreen')
               }}
             />
           </View>
