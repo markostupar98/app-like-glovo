@@ -1,8 +1,8 @@
 import { View, Text, Dimensions, SafeAreaView } from "react-native";
 import React from "react";
-import AntDesign from "@expo/vector-icons/AntDesign"
-import type { WelcomeScreenNavigationProp } from '../navigation/types'; // Adjust the path if necessary
- 
+import AntDesign from "@expo/vector-icons/AntDesign";
+import type { GeneralNavigationProp } from "../navigation/types"; // Adjust the path if necessary
+
 type AntDesignIconName =
   | "key"
   | "filter"
@@ -24,14 +24,21 @@ type AntDesignIconName =
 type HeaderProps = {
   title: string;
   type: AntDesignIconName;
-  navigation:WelcomeScreenNavigationProp // Use the defined union type here
+  navigation: GeneralNavigationProp; // Use the defined union type here
 };
 
-const Header = ({title, type, navigation  }:HeaderProps) => {
+const Header = ({ title, type, navigation }: HeaderProps) => {
   return (
     <SafeAreaView className="flex-row bg-emerald-300/70 h-20 items-center">
       <View className="mt-5 ml-3">
-        <AntDesign onPress={() => {}} name={type} size={28} color="black" />
+        <AntDesign
+          onPress={() => {
+            navigation.goBack();
+          }}
+          name={type}
+          size={28}
+          color="black"
+        />
       </View>
       <View className="p-4 mt-5">
         <Text className="text-xl">{title}</Text>

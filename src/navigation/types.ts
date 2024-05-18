@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps, NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { CompositeNavigationProp } from '@react-navigation/native';
 
 export type RootStackParamList = {
   WelcomeScreen: undefined;
@@ -13,3 +14,9 @@ export type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'Sign
 // Type for navigation prop
 export type WelcomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'WelcomeScreen'>;
 export type SignInScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'SignInScreen'>;
+
+// General navigation prop type for Header
+export type GeneralNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<RootStackParamList>,
+  NativeStackNavigationProp<RootStackParamList>
+>;
