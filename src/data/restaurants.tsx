@@ -1,3 +1,5 @@
+import { dishes } from "./dishes";
+
 export const restaurants = [
     {
       id: 0,
@@ -52,6 +54,22 @@ export const restaurants = [
       rating: 4.9,
       category: "Restaurant",
       address: "303 Gourmet St",
-    }
+    },
+    {
+      id: 0,
+      name: 'Italian Bistro',
+      category: 'Italian',
+      address: '123 Main St',
+      image: require('../../assets/italianbistro.png'),
+      dishes: [dishes[0], dishes[1], dishes[2]],  // Select dishes for this restaurant
+    },
+    {
+      id: 1,
+      name: 'Mexican Fiesta',
+      category: 'Mexican',
+      address: '456 Elm St',
+      image: require('../../assets/mexicanfiesta.jpeg'),
+      dishes: [dishes[3], dishes[4], dishes[5]],  // Select dishes for this restaurant
+    },
   ];
   

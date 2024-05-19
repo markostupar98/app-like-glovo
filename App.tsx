@@ -7,18 +7,19 @@ import SignInScreen from "./src/screens/auth/SignInScreen";
 import type { RootStackParamList } from "./src/navigation/types";
 import HomeScreen from "./src/screens/HomeScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import RestaurantScreen from "./src/screens/RestaurantScreen";
 
-const Drawer = createDrawerNavigator();
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
-        <Drawer.Screen name="SignInScreen" component={SignInScreen} />
-        <Drawer.Screen name="HomeScreen" component={HomeScreen} />
-      </Drawer.Navigator>
+      <Stack.Navigator screenOptions={{headerShown:false}}>
+        <Stack.Screen name="SignInScreen" component={SignInScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="RestaurantScreen" component={RestaurantScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

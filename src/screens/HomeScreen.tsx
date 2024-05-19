@@ -15,7 +15,7 @@ const HomeScreen = () => {
 
   return (
     <View className="flex-1">
-      {/* <HomeHeader /> */}
+      <HomeHeader />
       <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={true}>
         <Search />
         <Categories />
