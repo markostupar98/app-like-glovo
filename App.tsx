@@ -8,6 +8,9 @@ import type { RootStackParamList } from "./src/navigation/types";
 import HomeScreen from "./src/screens/HomeScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import RestaurantScreen from "./src/screens/RestaurantScreen";
+import CartScreen from "./src/screens/CartScreen";
+import OrderPrepScreen from "./src/screens/OrderPrepScreen";
+import DeliveryScreen from "./src/screens/DeliveryScreen";
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -19,6 +22,9 @@ function App() {
         <Stack.Screen name="SignInScreen" component={SignInScreen} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="RestaurantScreen" component={RestaurantScreen} />
+        <Stack.Screen name="CartScreen" options={{presentation:'modal'}} component={CartScreen} />
+        <Stack.Screen name="OrderPrepScreen" options={{presentation:'fullScreenModal'}} component={OrderPrepScreen} />
+        <Stack.Screen name="DeliveryScreen" options={{presentation:'fullScreenModal'}} component={DeliveryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
