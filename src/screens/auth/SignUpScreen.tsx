@@ -6,7 +6,7 @@ import * as Animatable from "react-native-animatable";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
-import { Link, useNavigation } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();

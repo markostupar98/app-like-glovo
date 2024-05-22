@@ -24,6 +24,7 @@
     "@types/react-native-maps": "0.24.2",
     "expo": "~51.0.6",
     "expo-crypto": "^13.0.2",
+    "expo-location": "~17.0.1",
     "expo-router": "^3.5.14",
     "expo-secure-store": "^13.0.1",
     "expo-status-bar": "~1.12.1",
