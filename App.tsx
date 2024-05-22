@@ -11,20 +11,34 @@ import RestaurantScreen from "./src/screens/RestaurantScreen";
 import CartScreen from "./src/screens/CartScreen";
 import OrderPrepScreen from "./src/screens/OrderPrepScreen";
 import DeliveryScreen from "./src/screens/DeliveryScreen";
-
+import SignUpScreen from "./src/screens/auth/SignUpScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}}>
-        <Stack.Screen name="SignInScreen" component={SignInScreen} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="WelcomeScreen" component={Welcome} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="SignInScreen" component={SignInScreen} />
+        <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
         <Stack.Screen name="RestaurantScreen" component={RestaurantScreen} />
-        <Stack.Screen name="CartScreen" options={{presentation:'modal'}} component={CartScreen} />
-        <Stack.Screen name="OrderPrepScreen" options={{presentation:'fullScreenModal'}} component={OrderPrepScreen} />
-        <Stack.Screen name="DeliveryScreen" options={{presentation:'fullScreenModal'}} component={DeliveryScreen} />
+        <Stack.Screen
+          name="CartScreen"
+          options={{ presentation: "modal" }}
+          component={CartScreen}
+        />
+        <Stack.Screen
+          name="OrderPrepScreen"
+          options={{ presentation: "fullScreenModal" }}
+          component={OrderPrepScreen}
+        />
+        <Stack.Screen
+          name="DeliveryScreen"
+          options={{ presentation: "fullScreenModal" }}
+          component={DeliveryScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
