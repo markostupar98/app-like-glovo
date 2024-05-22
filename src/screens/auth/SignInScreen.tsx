@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import * as Animatable from "react-native-animatable";
@@ -7,9 +7,36 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
 import type { SignInScreenProps } from "../../navigation/types";
 import { useNavigation } from "@react-navigation/native";
+import { supabase } from "../../lib/supabase";
 
 const SignInScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+
+  // Password hide func
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // Sign in func
+  const signInWithEmail = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Error", error.message);
+    } else {
+      navigation.navigate("HomeScreen");
+    }
+  };
   return (
     <View className="flex-1">
       <Header title="Sign In" type="back" />
@@ -26,6 +53,8 @@ const SignInScreen = () => {
       <View className="mt-8">
         <View>
           <TextInput
+            value={email}
+            onChangeText={setEmail}
             placeholder="Email"
             className="border border-neutral-300 mb-8 mx-5 rounded-lg h-10 p-2"
           />
@@ -34,14 +63,20 @@ const SignInScreen = () => {
           <Animatable.View>
             <AntDesign name="lock1" size={24} color="black" />
           </Animatable.View>
-          <TextInput placeholder="Password" className="h-10" />
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            className="h-10"
+          />
 
           <Animatable.View>
             <MaterialIcons
-              name="visibility-off"
+              name={`${showPassword ? "visibility" : "visibility-off"}`}
               size={24}
               color="black"
               style={{ marginRight: 5 }}
+              onPress={toggleShowPassword}
             />
           </Animatable.View>
         </View>
@@ -49,13 +84,12 @@ const SignInScreen = () => {
       <View className="w-90 mx-7 my-2">
         <Button
           title={"Sign In"}
+          disabled={loading}
           buttonStyle={{
             borderRadius: 30,
             backgroundColor: "rgba(111, 202, 186, 1)",
           }}
-          onPress={() => {
-            navigation.navigate("HomeScreen");
-          }}
+          onPress={signInWithEmail}
         />
       </View>
       <View className="items-center my-3">
