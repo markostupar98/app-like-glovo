@@ -1,12 +1,10 @@
 import { View, Text, FlatList, Pressable, Image } from "react-native";
 import React from "react";
-import { categories } from "../data/categories";
 
-
-const Categories = () => {
+const Categories = ({ categories }) => {
   return (
-    <View style={{ marginTop: 20, width: '100%', backgroundColor: '#E5E7EB' }}>
-      <Text style={{ fontSize: 24, marginLeft: 8, color: '#6B7280', fontWeight: '600' }}>
+    <View className="mt-5 w-full bg-gray-200">
+      <Text className="text-xl ml-2 text-neutral-500 font-semibold">
         Categories
       </Text>
       <View>
@@ -14,14 +12,14 @@ const Categories = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           data={categories}
-          keyExtractor={(item) => item.id.toString()} // Ensure you have a unique key for each item
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <Pressable>
-              <View style={{ borderRadius: 24, backgroundColor: '#34D399', justifyContent: 'center', alignItems: 'center', padding: 8, width: 60, marginTop: 20, marginHorizontal: 12, height: 80 }}>
-                <Image style={{ height: 56, width: 56, borderRadius: 24 }} source={item.image} />
+              <View className="rounded-3xl bg-emerald-400 justify-center items-center p-2 w-15 mt-5 mx-3 h-20">
+                <Image className="h-14 w-14 rounded-3xl" source={{ uri: item.image }} />
               </View>
-              <View style={{ alignItems: 'center' }}>
-                <Text style={{ color: '#6B7280', fontWeight: '600' }}>{item.name}</Text>
+              <View className="items-center">
+                <Text className="text-neutral-500 font-semibold">{item.name}</Text>
               </View>
             </Pressable>
           )}
