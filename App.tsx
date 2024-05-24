@@ -14,6 +14,7 @@ import OrderPrepScreen from "./src/screens/OrderPrepScreen";
 import DeliveryScreen from "./src/screens/DeliveryScreen";
 import SignUpScreen from "./src/screens/auth/SignUpScreen";
 import UserProfileScreen from "./src/screens/auth/UserProfileScreen";
+import AllRestaurantsScreen from "./src/screens/AllRestaurantsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,6 +28,10 @@ function App() {
           <Stack.Screen name="SignInScreen" component={SignInScreen} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
           <Stack.Screen name="RestaurantScreen" component={RestaurantScreen} />
+          <Stack.Screen
+            name="AllRestaurantsScreen"
+            component={AllRestaurantsScreen}
+          />
           <Stack.Screen
             name="CartScreen"
             options={{ presentation: "modal" }}

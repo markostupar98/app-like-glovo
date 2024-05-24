@@ -1,8 +1,16 @@
+// Featured.tsx
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React from "react";
+import React from 'react';
 import RestaurantCard from "./RestaurantCard";
+import { useNavigation } from '@react-navigation/native';
 
 const Featured = ({ name, description, featuredRestaurants }) => {
+  const navigation = useNavigation();
+
+  const handleSeeAllPress = () => {
+    navigation.navigate('AllRestaurantsScreen', { restaurants: featuredRestaurants });
+  };
+
   return (
     <View>
       <View className="flex-row justify-between items-center px-4">
@@ -10,7 +18,7 @@ const Featured = ({ name, description, featuredRestaurants }) => {
           <Text className="font-bold text-lg">{name}</Text>
           <Text className="text-gray-500 text-xs">{description}</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleSeeAllPress}>
           <Text className="font-semibold">See all</Text>
         </TouchableOpacity>
       </View>
