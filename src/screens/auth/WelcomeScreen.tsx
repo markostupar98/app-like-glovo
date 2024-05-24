@@ -2,12 +2,10 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 import Swiper from "react-native-swiper";
 import { Button } from "@rneui/themed";
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { WelcomeScreenProps } from '../../navigation/types';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { WelcomeScreenProps } from "../../navigation/types";
 
-
-
-const Welcome = ({navigation}:WelcomeScreenProps) => {
+const Welcome = ({ navigation }: WelcomeScreenProps) => {
   return (
     <View className="flex-1 justify-start pt-[60px] items-center">
       <View className="my-5">
@@ -20,36 +18,28 @@ const Welcome = ({navigation}:WelcomeScreenProps) => {
         <Swiper autoplay>
           <View className=" mb-20 justify-center items-center">
             <Image
-              source={{
-                uri: "https://images.deliveryhero.io/image/stores-glovo/stores/3aa789fb3b176f79917809b1e7167953eed7fa8331fbccd9454acc859c74861c?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
-              }}
+              source={require("../../../assets/carousel/carousel4.webp")}
               className="h-full w-full"
               resizeMode="contain"
             />
           </View>
           <View className="flex-1 mb-20 justify-center items-center">
             <Image
-              source={{
-                uri: "https://images.deliveryhero.io/image/stores-glovo/stores/3aa789fb3b176f79917809b1e7167953eed7fa8331fbccd9454acc859c74861c?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
-              }}
+              source={require("../../../assets/carousel/carousel3.webp")}
               className="h-full w-full"
               resizeMode="contain"
             />
           </View>
           <View className="flex-1 mb-20 justify-center items-center">
             <Image
-              source={{
-                uri: "https://images.deliveryhero.io/image/stores-glovo/stores/3aa789fb3b176f79917809b1e7167953eed7fa8331fbccd9454acc859c74861c?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
-              }}
+              source={require("../../../assets/carousel/carousel2.webp")}
               className="h-full w-full"
               resizeMode="contain"
             />
           </View>
           <View className="flex-1 mb-20 justify-center items-center">
             <Image
-              source={{
-                uri: "https://images.deliveryhero.io/image/stores-glovo/stores/3aa789fb3b176f79917809b1e7167953eed7fa8331fbccd9454acc859c74861c?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
-              }}
+              source={require("../../../assets/carousel/carousel1.webp")}
               className="h-full w-full"
               resizeMode="contain"
             />
@@ -63,13 +53,15 @@ const Welcome = ({navigation}:WelcomeScreenProps) => {
                 borderRadius: 30,
                 backgroundColor: "rgba(111, 202, 186, 1)",
               }}
-              onPress={()=>{
-                navigation.navigate('SignInScreen')
+              onPress={() => {
+                navigation.navigate("SignInScreen");
               }}
             />
           </View>
           <View className="mt-5 p-5">
-            <Text className="text-neutral-400">If you don't have an account</Text>
+            <Text className="text-neutral-400">
+              If you don't have an account
+            </Text>
           </View>
           <View className="justify-end flex-row mx-5">
             <Button
