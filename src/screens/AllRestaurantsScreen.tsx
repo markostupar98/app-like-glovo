@@ -1,26 +1,27 @@
-// AllRestaurantsScreen.tsx
-import React from 'react';
-import { View, Text, ScrollView } from "react-native";
-import RestaurantCard from "../components/RestaurantCard";
-import AllRestaurantsCard from '../components/AllRestaurantsCard';
-import Header from '../components/Header';
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
-const AllRestaurantsScreen = ({ route }) => {
-  const { restaurants } = route.params;
-
+const AllRestaurantsCard = ({ item }) => {
+  const navigation = useNavigation();
   return (
-    <View className='flex-1 mt-2'>
-      <Header title='Restaurants' type='back' />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: 15 }}
-      >
-        {restaurants.map((restaurant, index) => (
-          <AllRestaurantsCard item={restaurant} key={index} />
-        ))}
-      </ScrollView>
-    </View>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("RestaurantScreen", { restaurantId: item.id })}
+    >
+      <View className="mx-2 my-2 bg-white rounded-3xl p-2 shadow-lg">
+        <Image className="h-40 w-80 rounded-t-3xl" source={{ uri: item.image }} />
+        <View className="px-3 mt-2 space-y-2">
+          <Text className="font-semibold">{item.name}</Text>
+          <Text className="mb-2">Category: {item.categoryName}</Text>
+        </View>
+        <View className="flex-row items-center space-x-1">
+          <FontAwesome name="map-marker" size={24} color="gray" />
+          <Text className="text-xs">Nearby - {item.address}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
-export default AllRestaurantsScreen;
+export default AllRestaurantsCard;

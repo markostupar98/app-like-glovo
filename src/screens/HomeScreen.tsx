@@ -6,6 +6,7 @@ import Categories from "../components/Categories";
 import Featured from "../components/Featured";
 import { getCategories } from "../services/categoryService";
 import { getRestaurants } from "../services/restaurantService";
+import Background from "../components/Background";
 
 const HomeScreen = () => {
   const [categories, setCategories] = useState([]);
@@ -35,18 +36,22 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <View className="flex-1">
-      <HomeHeader />
-      <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={true}>
-        <Search />
-        <Categories categories={categories} />
-        <Featured
-          name="Featured Restaurants"
-          description="Handpicked places you'll love"
-          featuredRestaurants={restaurants}
-        />
-      </ScrollView>
-    </View>
+    <Background>
+      <View className="flex-1">
+        <HomeHeader />
+        <ScrollView
+          stickyHeaderIndices={[0]}
+          showsVerticalScrollIndicator={true}
+        >
+          <Search />
+          <Categories categories={categories} />
+          <Featured
+            name="Restaurants you might like"
+            featuredRestaurants={restaurants}
+          />
+        </ScrollView>
+      </View>
+    </Background>
   );
 };
 
