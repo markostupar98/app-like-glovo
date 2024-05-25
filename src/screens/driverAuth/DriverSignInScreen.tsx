@@ -1,41 +1,33 @@
 import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import React, { useState } from "react";
 import Header from "../../components/Header";
-import { supabase } from "../../lib/supabase";
 import * as Animatable from "react-native-animatable";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
+import type { SignInScreenProps } from "../../navigation/types";
 import { useNavigation } from "@react-navigation/native";
+import { supabase } from "../../lib/supabase";
 import Background from "../../components/Background";
 
-const SignUpScreen = () => {
-  const navigation = useNavigation();
-
-  const [username, setUsername] = useState("");
-  const [fullName, setFullName] = useState("");
+const DriverSignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
+  // Password hide func
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  // Supabase sign up
-  async function signUpWithEmail() {
+  // Sign in func
+  const signInWithEmail = async () => {
     setLoading(true);
-
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
-      options: {
-        data: {
-          fullName,
-          username,
-        },
-      },
     });
 
     setLoading(false);
@@ -43,39 +35,24 @@ const SignUpScreen = () => {
     if (error) {
       Alert.alert("Error", error.message);
     } else {
-      Alert.alert(
-        "Success",
-        "Please check your email for the confirmation link."
-      );
-      navigation.navigate("SignInScreen");
+      navigation.navigate("HomeScreen");
     }
-  }
-
+  };
   return (
     <Background>
       <View className="flex-1">
-        <Header title="Sign Up" type="back" />
-        <View className="p-8 mt-3 items-center">
-          <Text className="text-xl text-neutral-600">Create your account</Text>
+        <Header title="Sign In As Driver" type="back" />
+        <View className="p-4">
+          <Text className="text-xl text-neutral-600">
+            Sign In and start driving
+          </Text>
         </View>
-        <View className="items-center justify-center mt-2"></View>
+        <View className="items-center justify-center mt-4">
+          <Text className="text-sm text-neutral-400">
+            Please enter your email and password
+          </Text>
+        </View>
         <View className="mt-8">
-          <View>
-            <TextInput
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Username"
-              className="border border-neutral-300 mb-8 mx-5 rounded-lg h-10 p-2"
-            />
-          </View>
-          <View>
-            <TextInput
-              value={fullName}
-              onChangeText={setFullName}
-              placeholder="Full Name"
-              className="border border-neutral-300 mb-8 mx-5 rounded-lg h-10 p-2"
-            />
-          </View>
           <View>
             <TextInput
               value={email}
@@ -89,7 +66,6 @@ const SignUpScreen = () => {
               <AntDesign name="lock1" size={24} color="black" />
             </Animatable.View>
             <TextInput
-              secureTextEntry={!showPassword}
               value={password}
               onChangeText={setPassword}
               placeholder="Password"
@@ -109,26 +85,53 @@ const SignUpScreen = () => {
         </View>
         <View className="w-90 mx-7 my-2">
           <Button
+            title={"Sign In"}
             disabled={loading}
-            title={"Register"}
             buttonStyle={{
               borderRadius: 30,
               backgroundColor: "rgba(111, 202, 186, 1)",
             }}
-            onPress={signUpWithEmail}
+            onPress={signInWithEmail}
           />
         </View>
-        <View className="items-center my-3">
-          <Text className="text-sm text-neutral-400">
-            Already have an account
-          </Text>
-          <Pressable className="my-2">
-            <Text className="font-bold underline">Sign In</Text>
-          </Pressable>
+        <Pressable
+          onPress={() => {}}
+          className="p-4 border justify-center my-5 flex-row border-neutral-500 mx-5 rounded-full"
+        >
+          <AntDesign
+            name="facebook-square"
+            size={24}
+            color="black"
+            style={{ marginRight: 15 }}
+          />
+          <Text>Sign In with facebook</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {}}
+          className="p-4 border justify-center flex-row border-neutral-500 mx-5  rounded-full"
+        >
+          <AntDesign
+            name="google"
+            size={24}
+            color="black"
+            style={{ marginRight: 15 }}
+          />
+          <Text>Sign In with Google</Text>
+        </Pressable>
+
+        <View className="justify-end my-5 flex-row mx-5">
+          <Button
+            onPress={() => navigation.navigate("DriverSignUpScreen")}
+            title={"Register As Driver"}
+            buttonStyle={{
+              borderRadius: 30,
+              backgroundColor: "rgba(111, 202, 186, 1)",
+            }}
+          />
         </View>
       </View>
     </Background>
   );
 };
 
-export default SignUpScreen;
+export default DriverSignInScreen;

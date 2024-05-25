@@ -15,6 +15,8 @@ import DeliveryScreen from "./src/screens/DeliveryScreen";
 import SignUpScreen from "./src/screens/auth/SignUpScreen";
 import UserProfileScreen from "./src/screens/auth/UserProfileScreen";
 import AllRestaurantsScreen from "./src/screens/AllRestaurantsScreen";
+import DriverSignInScreen from "./src/screens/driverAuth/DriverSignInScreen";
+import DriverSignUpScreen from "./src/screens/driverAuth/DriverSignUpScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,6 +28,8 @@ function App() {
           <Stack.Screen name="WelcomeScreen" component={Welcome} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="SignInScreen" component={SignInScreen} />
+          <Stack.Screen name="DriverSignInScreen" component={DriverSignInScreen} />
+          <Stack.Screen name="DriverSignUpScreen" component={DriverSignUpScreen} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
           <Stack.Screen name="RestaurantScreen" component={RestaurantScreen} />
           <Stack.Screen

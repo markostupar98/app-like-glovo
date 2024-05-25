@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Button } from "@rneui/themed";
 import Header from "../../components/Header";
 import MapView, { Marker } from "react-native-maps";
+import Background from "../../components/Background";
 
 const UserProfileScreen = () => {
   const navigation = useNavigation();
@@ -83,6 +84,7 @@ const UserProfileScreen = () => {
     }
   };
   return (
+    <Background> 
     <View className="flex-1">
       <Header title="Profile" type="back" />
       <View className="justify-center items-center p-5">
@@ -131,6 +133,7 @@ const UserProfileScreen = () => {
         />
       </View>
     </View>
+    </Background>
   );
 };
 
