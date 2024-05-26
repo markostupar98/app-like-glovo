@@ -5,6 +5,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DishRow from "../components/DishRow";
 import CartIcon from "../components/CartIcon";
+import { useSelector } from 'react-redux';
 import { StatusBar } from "expo-status-bar";
 import { supabase } from "../lib/supabase"; // Ensure you have a configured Supabase client
 import { fetchRestaurantDetails } from "../services/restaurantService";
@@ -12,12 +13,12 @@ import { fetchRestaurantDetails } from "../services/restaurantService";
 const RestaurantScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { restaurantId, userId } = route.params;
+  const { restaurantId } = route.params;
+  const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
   const [restaurant, setRestaurant] = useState(null);
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  console.log(restaurantId, userId)
   useEffect(() => {
     const loadRestaurantDetails = async () => {
       const { restaurant, dishes, error } = await fetchRestaurantDetails(restaurantId);

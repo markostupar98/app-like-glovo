@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import * as Animatable from "react-native-animatable";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/slice/userSlice'; // import the action
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
 import type { SignInScreenProps } from "../../navigation/types";
@@ -16,6 +18,8 @@ const SignInScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();  // Add useDispatch
+
 
   // Password hide func
   const toggleShowPassword = () => {
@@ -35,6 +39,7 @@ const SignInScreen = () => {
     if (error) {
       Alert.alert("Error", error.message);
     } else {
+      dispatch(setUser({ id: data.session.user.id }));
       navigation.navigate("HomeScreen");
     }
   };
