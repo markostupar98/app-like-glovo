@@ -12,11 +12,12 @@ import { fetchRestaurantDetails } from "../services/restaurantService";
 const RestaurantScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { restaurantId } = route.params;
+  const { restaurantId, userId } = route.params;
   const [restaurant, setRestaurant] = useState(null);
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  console.log(restaurantId, userId)
   useEffect(() => {
     const loadRestaurantDetails = async () => {
       const { restaurant, dishes, error } = await fetchRestaurantDetails(restaurantId);
@@ -46,7 +47,7 @@ const RestaurantScreen = () => {
 
   return (
     <View>
-      <CartIcon />
+      <CartIcon/>
       <StatusBar style="light"/>
       <ScrollView>
         <View className="relative">

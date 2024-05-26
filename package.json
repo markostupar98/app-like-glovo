@@ -30,6 +30,7 @@
     "expo-router": "^3.5.14",
     "expo-secure-store": "^13.0.1",
     "expo-status-bar": "~1.12.1",
+    "haversine": "^1.1.1",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.74.1",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/haversine": "^1.1.8",
     "@types/react": "~18.2.45",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.1.3"

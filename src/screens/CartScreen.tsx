@@ -1,18 +1,89 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Entypo from "@expo/vector-icons/Entypo";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch, useSelector } from 'react-redux';
-import { addItem, updateItemQuantity, removeItem } from "../store/slice/cartSlice";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addItem,
+  updateItemQuantity,
+  removeItem,
+} from "../store/slice/cartSlice";
+import {
+  calculateDelivery,
+  getDistanceFromLatLonInKm,
+} from "../lib/deliveryFeeandTimeCalc";
+import { fetchRestaurantDetails } from "../services/restaurantService";
+import { fetchUserProfile } from "../services/userService";
 
 const CartScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const cartItems = useSelector(state => state.cart.items);
+  const route = useRoute();
+  const { userId, restaurantId } = route.params;
+  const cartItems = useSelector((state) => state.cart.items);
+
+  const [deliveryInfo, setDeliveryInfo] = useState({ fee: 0, time: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!restaurantId || !userId) {
+      Alert.alert("Error", "Restaurant ID or User ID is missing.");
+      setLoading(false);
+      return;
+    }
+    const loadDetails = async () => {
+      try {
+        setLoading(true);
+
+        const [
+          { restaurant, error: restaurantError },
+          { profile, error: profileError },
+        ] = await Promise.all([
+          fetchRestaurantDetails(restaurantId),
+          fetchUserProfile(userId),
+        ]);
+
+        if (restaurantError) throw new Error(restaurantError);
+        if (profileError) throw new Error(profileError);
+
+        if (restaurant && profile) {
+          const distance = getDistanceFromLatLonInKm(
+            profile.latitude,
+            profile.longitude,
+            restaurant.latitude,
+            restaurant.longitude
+          );
+          const { deliveryFee, deliveryTime } = calculateDelivery(distance);
+          setDeliveryInfo({ fee: deliveryFee, time: deliveryTime });
+        }
+      } catch (error) {
+        console.error("Error loading details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (restaurantId && userId) {
+      loadDetails();
+    } else {
+      console.error("Restaurant ID or User ID is undefined");
+      setLoading(false);
+    }
+  }, [restaurantId, userId]);
 
   const handleAddToCart = (dish) => {
-    dispatch(addItem({ id: dish.id, name: dish.name, price: dish.price, quantity: 1 }));
+    dispatch(
+      addItem({ id: dish.id, name: dish.name, price: dish.price, quantity: 1 })
+    );
   };
 
   const handleUpdateQuantity = (dishId, quantity) => {
@@ -24,8 +95,15 @@ const CartScreen = () => {
   };
 
   const calculateSubtotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
 
   return (
     <View className="bg-white flex-1 ">
@@ -37,9 +115,7 @@ const CartScreen = () => {
           <Ionicons name="arrow-back-circle" size={40} color="#00d062" />
         </TouchableOpacity>
         <View>
-          <Text className="text-center font-bold text-lg">
-            Your Cart
-          </Text>
+          <Text className="text-center font-bold text-lg">Your Cart</Text>
         </View>
       </View>
       <View className="bg-emerald-300/100 opacity-50 flex-row px-4 items-center">
@@ -48,7 +124,7 @@ const CartScreen = () => {
           className="h-20 w-20 rounded-full"
         />
         <Text className="flex-1 pl-4 text-neutral-600">
-          Deliver in 20-30 minutes
+          Deliver in {deliveryInfo.time.toFixed(0)} minutes
         </Text>
         <TouchableOpacity>
           <Text className="font-bold text-emerald-900">Change</Text>
@@ -64,27 +140,29 @@ const CartScreen = () => {
             key={index}
             className="flex-row items-center space-x-3 py-2 px-2 bg-white rounded-3xl mx-2 mb-3 shadow-md"
           >
-            <Text className="font-bold text-emerald-700">{dish.quantity} x</Text>
+            <Text className="font-bold text-emerald-700">
+              {dish.quantity} x
+            </Text>
             <Image className="h-14 w-14 rounded-full" source={dish.image} />
             <Text className="flex-1 font-bold text-gray-600">{dish.name}</Text>
             <Text className="font-semibold text-neutral-600 text-base">
               $ {dish.price}
             </Text>
-            <TouchableOpacity 
-              className="rounded-full bg-emerald-400" 
+            <TouchableOpacity
+              className="rounded-full bg-emerald-400"
               onPress={() => handleUpdateQuantity(dish.id, -1)}
             >
               <Entypo name="circle-with-minus" size={20} color="white" />
             </TouchableOpacity>
             <Text className="px-3">{dish.quantity}</Text>
-            <TouchableOpacity 
-              className="rounded-full bg-emerald-400" 
+            <TouchableOpacity
+              className="rounded-full bg-emerald-400"
               onPress={() => handleUpdateQuantity(dish.id, 1)}
             >
               <Entypo name="circle-with-plus" size={20} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity 
-              className="rounded-full bg-red-400" 
+            <TouchableOpacity
+              className="rounded-full bg-red-400"
               onPress={() => handleRemoveFromCart(dish.id)}
             >
               <Entypo name="circle-with-cross" size={20} color="white" />
@@ -96,19 +174,27 @@ const CartScreen = () => {
       <View className="p-6 px-8 rounded-t-3xl space-y-4 bg-emerald-500">
         <View className="flex-row justify-between">
           <Text className="text-white">Subtotal</Text>
-          <Text className="text-white font-extrabold">${calculateSubtotal()}</Text>
+          <Text className="text-white font-extrabold">
+            ${calculateSubtotal()}
+          </Text>
         </View>
         <View className="flex-row justify-between">
           <Text className="text-white">Delivery Fee</Text>
-          <Text className="text-white font-extrabold">$2</Text>
+          <Text className="text-white font-extrabold">
+            $ {deliveryInfo.fee.toFixed(2)}
+          </Text>
         </View>
         <View className="flex-row justify-between">
           <Text className="text-white">Total</Text>
-          <Text className="text-white font-extrabold">${calculateSubtotal() + 2}</Text>
+          <Text className="text-white font-extrabold">
+            ${(calculateSubtotal() + deliveryInfo.fee).toFixed(2)}
+          </Text>
         </View>
         <View>
           <TouchableOpacity
-            onPress={() => navigation.navigate("OrderPrepScreen")}
+            onPress={() =>
+              navigation.navigate("OrderPrepScreen", { restaurantId:restaurantId, userId:userId })
+            }
             className="bg-emerald-400/100 p-3 rounded-full"
           >
             <Text className="text-white text-center font-bold text-lg">
@@ -122,4 +208,3 @@ const CartScreen = () => {
 };
 
 export default CartScreen;
-  
