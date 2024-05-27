@@ -21,22 +21,7 @@ import DriverSignUpScreen from "./src/screens/driverAuth/DriverSignUpScreen";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
-  const [userProfile, setUserProfile] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      const profile = await getUserProfile();
-      setUserProfile(profile);
-      setLoading(false);
-    };
-
-    fetchUserProfile();
-  }, []);
-
-  if (loading) {
-    return <Text>Loading...</Text>; // You can replace this with a loading spinner
-  }
+  
   return (
     <Provider store={store}>
       <NavigationContainer>
