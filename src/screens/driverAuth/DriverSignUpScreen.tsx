@@ -25,33 +25,39 @@ const DriverSignUpScreen = () => {
     setShowPassword(!showPassword);
   };
 
-  async function signUpWithEmail() {
+  const signUpWithEmail = async () => {
     setLoading(true);
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          fullName,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+  
+      if (error) throw error;
+  
+      const user = data.user;
+      if (user) {
+        const { error: profileError } = await supabase.from('profiles').upsert({
+          id: user.id,
+          full_name: fullName,
           vehicle_type: vehicleType,
-          phone,
-        },
-      },
-    });
-
-    setLoading(false);
-
-    if (error) {
-      Alert.alert("Error", error.message);
-    } else {
-      Alert.alert(
-        "Success",
-        "Please check your email for the confirmation link."
-      );
+          phone: phone,
+          group: 'DRIVER',
+        });
+  
+        if (profileError) throw profileError;
+      }
+  
+      Alert.alert("Success", "Check your email for verification!");
       navigation.navigate("DriverSignInScreen");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+  
+  
 
   return (
     <Background>
