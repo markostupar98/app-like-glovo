@@ -7,9 +7,9 @@ export const fetchUserProfile = async (userId) => {
   }
 
   const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
+    .from("profiles")
+    .select("id, latitude, longitude") // Include latitude and longitude
+    .eq("id", userId)
     .single();
 
   if (profileError) {

@@ -35,30 +35,30 @@ export const fetchRestaurantDetails = async (restaurantId) => {
     return { restaurant: null, dishes: [], error: "No restaurant ID provided" };
   }
 
-  try {
-    const { data: restaurant, error: restaurantError } = await supabase
-      .from('restaurants')
-      .select(`
-        id,
-        name,
-        image,
-        address,
-        category: categories (name),
-        dishes!inner(*)  // Use inner join to ensure only restaurants with dishes are fetched
-      `)
-      .eq('id', restaurantId)
-      .single();
+  const { data: restaurant, error: restaurantError } = await supabase
+    .from('restaurants')
+    .select(`
+      id,
+      name,
+      image,
+      address,
+      latitude, 
+      longitude, 
+      category: categories (name),
+      dishes!inner(*)  
+    `)
+    .eq('id', restaurantId)
+    .single();
 
-    if (restaurantError) throw new Error(restaurantError.message);
-
-    // Assuming dishes are included as a nested object
-    const dishes = restaurant.dishes || [];
-    delete restaurant.dishes; // Clean up the restaurant object if needed
-
-    return { restaurant, dishes, error: null };
-  } catch (error) {
-    console.error("Error fetching restaurant details:", error.message);
-    return { restaurant: null, dishes: [], error: error.message };
+  if (restaurantError) {
+    console.error("Error fetching restaurant details:", restaurantError.message);
+    return { restaurant: null, dishes: [], error: restaurantError.message };
   }
+
+  const dishes = restaurant.dishes || [];
+  delete restaurant.dishes; // Optionally clean up the restaurant object
+
+  return { restaurant, dishes, error: null };
 };
+
 

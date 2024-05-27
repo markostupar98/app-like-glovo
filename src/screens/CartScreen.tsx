@@ -28,7 +28,8 @@ const CartScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const route = useRoute();
-  const { userId, restaurantId } = route.params;
+  const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
+  const { restaurantId } = route.params;
   const cartItems = useSelector((state) => state.cart.items);
 
   const [deliveryInfo, setDeliveryInfo] = useState({ fee: 0, time: 0 });
@@ -62,6 +63,7 @@ const CartScreen = () => {
             restaurant.latitude,
             restaurant.longitude
           );
+          console.log("Calculated Distance:", distance); // Log calculated distance
           const { deliveryFee, deliveryTime } = calculateDelivery(distance);
           setDeliveryInfo({ fee: deliveryFee, time: deliveryTime });
         }
@@ -193,7 +195,10 @@ const CartScreen = () => {
         <View>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("OrderPrepScreen", { restaurantId:restaurantId, userId:userId })
+              navigation.navigate("OrderPrepScreen", {
+                restaurantId: restaurantId,
+                userId: userId,
+              })
             }
             className="bg-emerald-400/100 p-3 rounded-full"
           >

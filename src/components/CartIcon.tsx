@@ -7,12 +7,12 @@ import { fetchUserProfile } from "../services/userService";
 const CartIcon = () => {
   const navigation = useNavigation();
   const route = useRoute()
-  const {restaurantId, userId} = route.params
+  const {restaurantId} = route.params
+  const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
   const cartItems = useSelector((state) => state.cart.items);
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-console.log(restaurantId, userId)
   return (
     <View className="absolute bottom-5 w-full z-50">
       <TouchableOpacity
