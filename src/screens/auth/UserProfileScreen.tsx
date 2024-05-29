@@ -62,7 +62,7 @@ const UserProfileScreen = () => {
       longitude,
     });
     if (reverseGeocode.length > 0) {
-      setAddress(reverseGeocode[0].city);
+      setAddress(reverseGeocode[0].address);
     }
   };
 
@@ -73,7 +73,7 @@ const UserProfileScreen = () => {
         .update({
           latitude: location.latitude,
           longitude: location.longitude,
-          city: address,
+          address: address,
         })
         .eq("id", user.id);
       if (error) {

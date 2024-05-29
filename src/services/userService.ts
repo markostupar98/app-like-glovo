@@ -8,7 +8,7 @@ export const fetchUserProfile = async (userId) => {
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("id, latitude, longitude") // Include latitude and longitude
+    .select("id, latitude, longitude, address")
     .eq("id", userId)
     .single();
 

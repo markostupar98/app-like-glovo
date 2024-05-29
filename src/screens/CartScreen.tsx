@@ -23,10 +23,12 @@ import {
 } from "../lib/deliveryFeeandTimeCalc";
 import { fetchRestaurantDetails } from "../services/restaurantService";
 import { fetchUserProfile } from "../services/userService";
+import { createOrder } from "../services/orderService";
 
 const CartScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [userProfile, setUserProfile] = useState(null);  // State to store the user profile
   const route = useRoute();
   const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
   const { restaurantId } = route.params;
@@ -63,6 +65,7 @@ const CartScreen = () => {
             restaurant.latitude,
             restaurant.longitude
           );
+          setUserProfile(profile);  // Set the fetched profile into state
           console.log("Calculated Distance:", distance); // Log calculated distance
           const { deliveryFee, deliveryTime } = calculateDelivery(distance);
           setDeliveryInfo({ fee: deliveryFee, time: deliveryTime });
@@ -106,6 +109,31 @@ const CartScreen = () => {
   if (loading) {
     return <ActivityIndicator size="large" color="#00ff00" />;
   }
+
+  // Adding order
+  const handlePlaceOrder = async () => {
+    if (!userId || !restaurantId || !userProfile || !userProfile.address) {
+      Alert.alert("Error", "All necessary information is not available for placing the order.");
+      return;
+    }
+  
+    const total = calculateSubtotal() + deliveryInfo.fee;
+    setLoading(true);
+  
+    try {
+      const order = await createOrder(userId, restaurantId, userProfile.address, cartItems, total);
+      Alert.alert("Success", "Order placed successfully!");
+      navigation.navigate("OrderPrepScreen", {
+        restaurantId: restaurantId,
+        userId: userId
+      });
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   return (
     <View className="bg-white flex-1 ">
@@ -194,12 +222,7 @@ const CartScreen = () => {
         </View>
         <View>
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("OrderPrepScreen", {
-                restaurantId: restaurantId,
-                userId: userId,
-              })
-            }
+            onPress={handlePlaceOrder}
             className="bg-emerald-400/100 p-3 rounded-full"
           >
             <Text className="text-white text-center font-bold text-lg">
