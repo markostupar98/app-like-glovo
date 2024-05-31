@@ -35,10 +35,18 @@ export const deleteOrder = async (id: number) => {
 
 // src/services/orderService.js
 
-// src/services/orderService.js
-
 export const createOrder = async (userId, restaurantId, deliveryAddress, cartItems, total) => {
   try {
+    // Debugging
+    console.log('Creating order with details:', {
+      user_id: userId,
+      restaurant_id: restaurantId,
+      delivery_address: deliveryAddress,
+      total: total,
+      status: 'pending',
+      driver_id: null
+    });
+    
     const { data, error } = await supabase
       .from('orders')
       .insert([{
@@ -46,7 +54,7 @@ export const createOrder = async (userId, restaurantId, deliveryAddress, cartIte
         restaurant_id: restaurantId,
         delivery_address: deliveryAddress,
         total: total,
-        status: 'pending', // default status
+        status: 'pending',
         driver_id: null  // explicitly setting driver_id to null
       }]);
 
@@ -78,17 +86,24 @@ export const createOrder = async (userId, restaurantId, deliveryAddress, cartIte
 
 
 
+
+
 // Assiging driver to order
-const assignDriverToOrder = async (orderId, driverId) => {
-  const { data, error } = await supabase
-    .from('orders')
-    .update({ driver_id: driverId, status: 'assigned' })
-    .eq('id', orderId);
+export const assignDriverToOrder = async (orderId, driverId) => {
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ driver_id: driverId })
+      .eq('id', orderId);
 
-  if (error) {
-    console.error('Error assigning driver to order:', error);
-    return null;
+    if (error) {
+      console.error("Error assigning driver:", error.message);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error assigning driver:", error.message);
+    throw error;
   }
-
-  return data;
 };

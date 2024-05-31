@@ -31,21 +31,28 @@ const DriverSignUpScreen = () => {
       const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
+        options: {
+          data: {
+            full_name: fullName,
+            vehicle_type: vehicleType,
+            phone: phone,
+            role:'driver'
+          }
+        }
       });
   
       if (error) throw error;
   
       const user = data.user;
       if (user) {
-        const { error: profileError } = await supabase.from('profiles').upsert({
+        const { error: driverError } = await supabase.from('drivers').insert({
           id: user.id,
           full_name: fullName,
           vehicle_type: vehicleType,
           phone: phone,
-          group: 'DRIVER',
         });
   
-        if (profileError) throw profileError;
+        if (driverError) throw driverError;
       }
   
       Alert.alert("Success", "Check your email for verification!");
@@ -57,8 +64,6 @@ const DriverSignUpScreen = () => {
     }
   };
   
-  
-
   return (
     <Background>
       <View className="flex-1">

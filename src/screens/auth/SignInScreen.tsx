@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import * as Animatable from "react-native-animatable";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import axios from 'axios'
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../store/slice/userSlice'; // import the action
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -27,22 +28,28 @@ const SignInScreen = () => {
   };
 
   // Sign in func
-  const signInWithEmail = async () => {
-    setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
+const signInWithEmail = async () => {
+  setLoading(true);
+  try {
+    const response = await axios.post('http://192.168.1.224:3000/api/auth/signin', {
       email,
       password,
     });
+    const { token, userId } = response.data;  // Pretpostavimo da backend šalje ovo
 
     setLoading(false);
 
-    if (error) {
-      Alert.alert("Error", error.message);
-    } else {
-      dispatch(setUser({ id: data.session.user.id }));
+    if (response.data) {
+      dispatch(setUser({ id: userId, token: token }));
       navigation.navigate("HomeScreen");
+    } else {
+      Alert.alert("Login Failed", "Invalid credentials");
     }
-  };
+  } catch (error) {
+    setLoading(false);
+    Alert.alert("Error", error.message);
+  }
+};
   return (
     <Background>
       <View className="flex-1">

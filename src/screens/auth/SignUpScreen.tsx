@@ -1,8 +1,7 @@
 import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import React, { useState } from "react";
 import Header from "../../components/Header";
-import { supabase } from "../../lib/supabase";
-import * as Animatable from "react-native-animatable";
+import axios from "axios";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
@@ -16,6 +15,7 @@ const SignUpScreen = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -23,31 +23,42 @@ const SignUpScreen = () => {
     setShowPassword(!showPassword);
   };
 
-  // Supabase sign up
+  // Sign up function
   async function signUpWithEmail() {
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          fullName,
-          username,
-        },
-      },
-    });
-
-    setLoading(false);
-
-    if (error) {
-      Alert.alert("Error", error.message);
-    } else {
-      Alert.alert(
-        "Success",
-        "Please check your email for the confirmation link."
+    try {
+      const response = await axios.post(
+        "http://192.168.1.224:3000/api/auth/signup",
+        {
+          email: email,
+          password: password,
+          fullName: fullName,
+          username: username,
+          address: address,
+          role:'user'
+        }
       );
-      navigation.navigate("SignInScreen");
+      console.log("Username, Email, FullName:", username, email, fullName);
+
+      setLoading(false);
+
+      if (response.status === 200) {
+        Alert.alert(
+          "Success",
+          "Please check your email for the confirmation link."
+        );
+        navigation.navigate("SignInScreen");
+      } else {
+        throw new Error(response.data.message || "Something went wrong");
+      }
+    } catch (error) {
+      setLoading(false);
+      Alert.alert(
+        "Error",
+        error.response ? error.response.data.message : error.message
+      );
+      console.log(error.message, error.response);
     }
   }
 
@@ -84,10 +95,18 @@ const SignUpScreen = () => {
               className="border border-neutral-300 mb-8 mx-5 rounded-lg h-10 p-2"
             />
           </View>
+          <View>
+            <TextInput
+              value={address}
+              onChangeText={setAddress}
+              placeholder="Address"
+              className="border border-neutral-300 mb-8 mx-5 rounded-lg h-10 p-2"
+            />
+          </View>
           <View className="border mx-5 border-neutral-300  flex-row justify-between items-center mb-5  rounded-lg">
-            <Animatable.View>
+            <View>
               <AntDesign name="lock1" size={24} color="black" />
-            </Animatable.View>
+            </View>
             <TextInput
               secureTextEntry={!showPassword}
               value={password}
@@ -96,7 +115,7 @@ const SignUpScreen = () => {
               className="h-10"
             />
 
-            <Animatable.View>
+            <View>
               <MaterialIcons
                 name={`${showPassword ? "visibility" : "visibility-off"}`}
                 size={24}
@@ -104,7 +123,7 @@ const SignUpScreen = () => {
                 style={{ marginRight: 5 }}
                 onPress={toggleShowPassword}
               />
-            </Animatable.View>
+            </View>
           </View>
         </View>
         <View className="w-90 mx-7 my-2">

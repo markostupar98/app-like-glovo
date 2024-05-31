@@ -133,7 +133,6 @@ const CartScreen = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <View className="bg-white flex-1 ">
@@ -155,6 +154,7 @@ const CartScreen = () => {
         />
         <Text className="flex-1 pl-4 text-neutral-600">
           Deliver in {deliveryInfo.time.toFixed(0)} minutes
+          To {userProfile.address}
         </Text>
         <TouchableOpacity>
           <Text className="font-bold text-emerald-900">Change</Text>

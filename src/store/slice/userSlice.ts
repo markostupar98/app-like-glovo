@@ -3,19 +3,21 @@ import { createSlice } from '@reduxjs/toolkit';
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    id: null,  // Initialize user id as null
+    id: null,
+    token: null,
   },
   reducers: {
     setUser: (state, action) => {
-      state.id = action.payload.id;  // Payload should contain the user id
+      state.id = action.payload.id;
+      state.token = action.payload.token;
     },
     clearUser: (state) => {
       state.id = null;
+      state.token = null;
     },
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { setUser, clearUser } = userSlice.actions;
 
 export default userSlice.reducer;

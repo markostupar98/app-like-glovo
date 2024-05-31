@@ -10,6 +10,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@prisma/client": "^5.14.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-picker/picker": "^2.7.6",
     "@react-navigation/bottom-tabs": "^6.5.20",
@@ -24,6 +25,7 @@
     "@tanstack/react-query": "^5.37.1",
     "@types/react-native": "^0.73.0",
     "@types/react-native-maps": "0.24.2",
+    "axios": "^1.7.2",
     "expo": "~51.0.6",
     "expo-crypto": "^13.0.2",
     "expo-location": "~17.0.1",
@@ -46,6 +48,7 @@
     "@babel/core": "^7.20.0",
     "@types/haversine": "^1.1.8",
     "@types/react": "~18.2.45",
+    "prisma": "^5.14.0",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.1.3"
   },
