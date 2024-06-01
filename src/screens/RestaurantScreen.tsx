@@ -7,7 +7,6 @@ import DishRow from "../components/DishRow";
 import CartIcon from "../components/CartIcon";
 import { useSelector } from 'react-redux';
 import { StatusBar } from "expo-status-bar";
-import { supabase } from "../lib/supabase"; // Ensure you have a configured Supabase client
 import { fetchRestaurantDetails } from "../services/restaurantService";
 
 const RestaurantScreen = () => {

@@ -1,9 +1,12 @@
-import { supabase } from "../lib/supabase";
+// services/categoryService.js
+import axios from 'axios';
 
 export const getCategories = async () => {
-  const { data, error } = await supabase
-    .from('categories')
-    .select('*');
-  if (error) throw error;
-  return data;
+  try {
+    const response = await axios.get('http://192.168.0.35:3000/api/categories');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
 };
