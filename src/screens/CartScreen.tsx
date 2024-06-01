@@ -21,43 +21,39 @@ import {
   calculateDelivery,
   getDistanceFromLatLonInKm,
 } from "../lib/deliveryFeeandTimeCalc";
-import { fetchRestaurantDetails } from "../services/restaurantService";
+import { fetchRestaurantDetailsComplete } from "../services/restaurantService";
 import { fetchUserProfile } from "../services/userService";
 import { createOrder } from "../services/orderService";
 
 const CartScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [userProfile, setUserProfile] = useState(null);  // State to store the user profile
+  const [userProfile, setUserProfile] = useState(null);
+  const [restaurant, setRestaurant] = useState(null); // State to store the user profile
   const route = useRoute();
-  const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
+  const userId = useSelector((state) => state.user.id); // Accessing user id from Redux store
   const { restaurantId } = route.params;
   const cartItems = useSelector((state) => state.cart.items);
 
   const [deliveryInfo, setDeliveryInfo] = useState({ fee: 0, time: 0 });
   const [loading, setLoading] = useState(true);
 
+  // U CartScreen
   useEffect(() => {
-    if (!restaurantId || !userId) {
-      Alert.alert("Error", "Restaurant ID or User ID is missing.");
-      setLoading(false);
-      return;
-    }
     const loadDetails = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-
-        const [
-          { restaurant, error: restaurantError },
-          { profile, error: profileError },
-        ] = await Promise.all([
-          fetchRestaurantDetails(restaurantId),
+        const [restaurantResult, userProfileResult] = await Promise.all([
+          fetchRestaurantDetailsComplete(restaurantId),
           fetchUserProfile(userId),
         ]);
-
-        if (restaurantError) throw new Error(restaurantError);
-        if (profileError) throw new Error(profileError);
-
+  
+        if (restaurantResult.error || userProfileResult.error) {
+          throw new Error(restaurantResult.error || userProfileResult.error);
+        }
+  
+        const restaurant = restaurantResult.restaurant;
+        const profile = userProfileResult.profile;
         if (restaurant && profile) {
           const distance = getDistanceFromLatLonInKm(
             profile.latitude,
@@ -65,24 +61,23 @@ const CartScreen = () => {
             restaurant.latitude,
             restaurant.longitude
           );
-          setUserProfile(profile);  // Set the fetched profile into state
-          console.log("Calculated Distance:", distance); // Log calculated distance
+  
           const { deliveryFee, deliveryTime } = calculateDelivery(distance);
+          setUserProfile(profile);
+          setRestaurant(restaurant);
           setDeliveryInfo({ fee: deliveryFee, time: deliveryTime });
+        } else {
+          throw new Error("Missing restaurant or user profile data");
         }
       } catch (error) {
         console.error("Error loading details:", error);
+        Alert.alert("Error", error.message);
       } finally {
         setLoading(false);
       }
     };
-
-    if (restaurantId && userId) {
-      loadDetails();
-    } else {
-      console.error("Restaurant ID or User ID is undefined");
-      setLoading(false);
-    }
+  
+    loadDetails();
   }, [restaurantId, userId]);
 
   const handleAddToCart = (dish) => {
@@ -113,19 +108,28 @@ const CartScreen = () => {
   // Adding order
   const handlePlaceOrder = async () => {
     if (!userId || !restaurantId || !userProfile || !userProfile.address) {
-      Alert.alert("Error", "All necessary information is not available for placing the order.");
+      Alert.alert(
+        "Error",
+        "All necessary information is not available for placing the order."
+      );
       return;
     }
-  
+
     const total = calculateSubtotal() + deliveryInfo.fee;
     setLoading(true);
-  
+
     try {
-      const order = await createOrder(userId, restaurantId, userProfile.address, cartItems, total);
+      const order = await createOrder(
+        userId,
+        restaurantId,
+        userProfile.address,
+        cartItems,
+        total
+      );
       Alert.alert("Success", "Order placed successfully!");
       navigation.navigate("OrderPrepScreen", {
         restaurantId: restaurantId,
-        userId: userId
+        userId: userId,
       });
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -133,6 +137,10 @@ const CartScreen = () => {
       setLoading(false);
     }
   };
+
+  const userAddress = userProfile
+    ? userProfile.address
+    : "Address not available";
 
   return (
     <View className="bg-white flex-1 ">
@@ -153,8 +161,7 @@ const CartScreen = () => {
           className="h-20 w-20 rounded-full"
         />
         <Text className="flex-1 pl-4 text-neutral-600">
-          Deliver in {deliveryInfo.time.toFixed(0)} minutes
-          To {userProfile.address}
+          Deliver in {deliveryInfo.time.toFixed(0)} minutes To userAddress
         </Text>
         <TouchableOpacity>
           <Text className="font-bold text-emerald-900">Change</Text>

@@ -1,35 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DishRow from "../components/DishRow";
 import CartIcon from "../components/CartIcon";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import { StatusBar } from "expo-status-bar";
-import { fetchRestaurantDetails } from "../services/restaurantService";
+import { fetchRestaurantDetailsBasic } from "../services/restaurantService";
 
 const RestaurantScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { restaurantId } = route.params;
-  const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
+  const userId = useSelector((state) => state.user.id); // Accessing user id from Redux store
   const [restaurant, setRestaurant] = useState(null);
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadRestaurantDetails = async () => {
-      const { restaurant, dishes, error } = await fetchRestaurantDetails(restaurantId);
-      if (error) {
-        console.log(error);
+      const response = await fetchRestaurantDetailsBasic(restaurantId);
+      if (response.error) {
+        console.log(response.error);
         return;
       }
-      setRestaurant(restaurant);
-      setDishes(dishes);
+      setRestaurant(response.restaurant);
+      setDishes(response.dishes || []); // Ensure dishes is always an array
       setLoading(false);
     };
-
+    console.log(restaurantId)
     loadRestaurantDetails();
   }, [restaurantId]);
 
@@ -39,7 +46,7 @@ const RestaurantScreen = () => {
 
   if (!restaurant) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text className="font-extrabold">No Restaurant Found</Text>
       </View>
     );
@@ -47,8 +54,8 @@ const RestaurantScreen = () => {
 
   return (
     <View>
-      <CartIcon/>
-      <StatusBar style="light"/>
+      <CartIcon />
+      <StatusBar style="light" />
       <ScrollView>
         <View className="relative">
           <Image className="w-full h-72" source={{ uri: restaurant.image }} />
@@ -67,7 +74,9 @@ const RestaurantScreen = () => {
             <Text className="text-3xl font-semibold">{restaurant.name}</Text>
             <View className="mr-6 bg-white rounded-3xl shadow-lg">
               <View className="px-3 pb-2 space-y-2">
-                <Text className="font-semibold text-base">{restaurant.categoryName}</Text>
+                <Text className="font-semibold text-base">
+                  {restaurant.category ? restaurant.category.name : "No Category"}
+                </Text>
               </View>
               <View className="flex-row items-center space-x-1">
                 <FontAwesome name="map-marker" size={24} color="gray" />

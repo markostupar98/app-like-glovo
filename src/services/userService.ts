@@ -1,21 +1,13 @@
-import { supabase } from "../lib/supabase";
+// services/userService.js
+import axios from 'axios';
+
 
 export const fetchUserProfile = async (userId) => {
-  if (!userId) {
-    console.error("fetchUserProfile was called without a userId");
-    return { profile: null, error: "No user ID provided" };
+  try {
+    const response = await axios.get(`http://192.168.0.35:3000/api/users/${userId}/profile`);
+    return { profile: response.data, error: null };
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return { profile: null, error: error.message };
   }
-
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("id, latitude, longitude, address")
-    .eq("id", userId)
-    .single();
-
-  if (profileError) {
-    console.error("Error fetching user profile:", profileError.message);
-    return { profile: null, error: profileError };
-  }
-
-  return { profile, error: null };
 };

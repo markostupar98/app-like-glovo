@@ -18,31 +18,31 @@ export const getRestaurants = async () => {
 };
 
 // services/restaurantService.js
-
-
-export const fetchRestaurantDetails = async (restaurantId) => {
-  if (!restaurantId) {
-    console.error("fetchRestaurantDetails was called without a restaurantId");
-    return { restaurant: null, dishes: [], error: "No restaurant ID provided" };
-  }
-
+// Fetch basic details of a restaurant by ID
+export const fetchRestaurantDetailsBasic = async (restaurantId) => {
   try {
     const response = await axios.get(`http://192.168.0.35:3000/api/restaurants/${restaurantId}`);
-    const restaurant = response.data;
-
-    if (!restaurant) {
+    if (!response.data) {
       return { restaurant: null, dishes: [], error: "Restaurant not found" };
     }
-
-    // Assume the backend returns restaurant details including an array of dishes
-    const dishes = restaurant.dishes || [];
-    delete restaurant.dishes; // Clean up the restaurant object if necessary
-
-    return { restaurant, dishes, error: null };
+    return { restaurant: response.data, dishes: response.data.dishes || [], error: null };
   } catch (error) {
-    console.error("Error fetching restaurant details:", error.message);
+    console.error("Error fetching basic restaurant details:", error);
     return { restaurant: null, dishes: [], error: error.message };
   }
 };
 
 
+// Fetch complete details of a restaurant by ID including coordinates and address
+export const fetchRestaurantDetailsComplete = async (restaurantId) => {
+  try {
+    const response = await axios.get(`http://192.168.0.35:3000/api/restaurants/${restaurantId}/complete`);
+    if (!response.data) {
+      return { restaurant: null, dishes: [], error: "Restaurant not found" };
+    }
+    return { restaurant: response.data, dishes: response.data.dishes || [], error: null };
+  } catch (error) {
+    console.error("Error fetching complete restaurant details:", error.message);
+    return { restaurant: null, dishes: [], error: error.message };
+  }
+};
