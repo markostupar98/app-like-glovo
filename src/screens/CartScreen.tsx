@@ -138,7 +138,6 @@ const CartScreen = () => {
       setLoading(false);
     }
   };
-
   const userAddress = userProfile
     ? userProfile.address
     : "Address not available";
@@ -162,7 +161,7 @@ const CartScreen = () => {
           className="h-20 w-20 rounded-full"
         />
         <Text className="flex-1 pl-4 text-neutral-600">
-          Deliver in {deliveryInfo.time.toFixed(0)} minutes To userAddress
+          Deliver in {deliveryInfo.time.toFixed(0)} minutes To {userAddress}
         </Text>
         <TouchableOpacity>
           <Text className="font-bold text-emerald-900">Change</Text>
