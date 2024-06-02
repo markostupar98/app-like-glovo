@@ -38,3 +38,17 @@ export const fetchOrders = async () => {
     throw error;
   }
 };
+
+// Assign driver to order
+export const assignDriverToOrder = async (orderId, driverId) => {
+  try {
+    const response = await axios.post(`http://192.168.0.35:3000/api/orders/assign-driver`, {
+      orderId,
+      driverId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error assigning driver to order:', error);
+    throw error;
+  }
+};
