@@ -5,7 +5,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
 import {  useSelector } from "react-redux";
-import { fetchRestaurantDetails } from "../services/restaurantService";
+import { fetchRestaurantDetailsComplete } from "../services/restaurantService";
 import { fetchUserProfile } from "../services/userService";
 import { calculateDelivery, getDistanceFromLatLonInKm } from "../lib/deliveryFeeandTimeCalc";
 
@@ -13,41 +13,47 @@ const DeliveryScreen = () => {
   const route = useRoute();
   const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
   const { restaurantId } = route.params;
+  const [userProfile, setUserProfile] = useState(null)
+  const [restaurant, setRestaurant] = useState(null);
+  
   const [deliveryInfo, setDeliveryInfo] = useState({ fee: 0, time: 0 });
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);  // State to store user profile
 
   useEffect(() => {
     const loadDetails = async () => {
-      if (!restaurantId || !userId) {
-        Alert.alert("Error", "Restaurant ID or User ID is missing.");
-        setLoading(false);
-        return;
-      }
+      setLoading(true);
       try {
-        setLoading(true);
+        const restaurantResult = await fetchRestaurantDetailsComplete(restaurantId);
+        if (restaurantResult.error) {
+          throw new Error(restaurantResult.error);
+        }
 
-        const [{ restaurant, error: restaurantError }, { profile, error: profileError }] = await Promise.all([
-          fetchRestaurantDetails(restaurantId),
-          fetchUserProfile(userId),
-        ]);
+        const userProfileResult = await fetchUserProfile(userId);
+        if (userProfileResult.error) {
+          throw new Error(userProfileResult.error);
+        }
 
-        if (restaurantError) throw new Error(restaurantError);
-        if (profileError) throw new Error(profileError);
-
+        const restaurant = restaurantResult.restaurant;
+        const profile = userProfileResult.profile;
         if (restaurant && profile) {
-          setProfile(profile);  // Set the profile state
           const distance = getDistanceFromLatLonInKm(
             profile.latitude,
             profile.longitude,
             restaurant.latitude,
             restaurant.longitude
           );
+
           const { deliveryFee, deliveryTime } = calculateDelivery(distance);
+          setUserProfile(profile);
+          setRestaurant(restaurant);
           setDeliveryInfo({ fee: deliveryFee, time: deliveryTime });
+        } else {
+          throw new Error("Missing restaurant or user profile data");
         }
       } catch (error) {
         console.error("Error loading details:", error);
+        Alert.alert("Error", error.message);
       } finally {
         setLoading(false);
       }
@@ -62,15 +68,15 @@ const DeliveryScreen = () => {
     return <ActivityIndicator size="large" />;
   }
 
-  if (!profile) {
+  if (!userProfile) {
     return <Text>No profile data available.</Text>;
   }
   return (
     <View className="flex-1">
       <MapView
         initialRegion={{
-          latitude: profile.latitude,
-          longitude: profile.longitude,
+          latitude: userProfile.latitude,
+          longitude: userProfile.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
@@ -79,11 +85,11 @@ const DeliveryScreen = () => {
       >
         <Marker
           coordinate={{
-            latitude: profile.latitude,
-            longitude: profile.longitude,
+            latitude: userProfile.latitude,
+            longitude: userProfile.longitude,
           }}
-          title={profile.name}
-          description={profile.description}
+          title={userProfile.name}
+          description={userProfile.description}
           pinColor="#6B7280"
         />
       </MapView>
