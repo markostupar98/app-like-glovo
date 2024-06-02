@@ -9,6 +9,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import Background from "../../components/Background";
+import { signupDriver } from "../../services/authService";
 
 const DriverSignUpScreen = () => {
   const navigation = useNavigation();
@@ -28,33 +29,16 @@ const DriverSignUpScreen = () => {
   const signUpWithEmail = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            full_name: fullName,
-            vehicle_type: vehicleType,
-            phone: phone,
-            role:'driver'
-          }
-        }
+      const { driverId, error } = await signupDriver({
+        fullName,
+        email,
+        password,
+        phone,
+        vehicleType
       });
-  
-      if (error) throw error;
-  
-      const user = data.user;
-      if (user) {
-        const { error: driverError } = await supabase.from('drivers').insert({
-          id: user.id,
-          full_name: fullName,
-          vehicle_type: vehicleType,
-          phone: phone,
-        });
-  
-        if (driverError) throw driverError;
-      }
-  
+
+      if (error) throw new Error(error);
+
       Alert.alert("Success", "Check your email for verification!");
       navigation.navigate("DriverSignInScreen");
     } catch (error) {

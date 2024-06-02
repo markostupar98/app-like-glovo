@@ -2,19 +2,22 @@ import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import React, { useState } from "react";
 import Header from "../../components/Header";
 import * as Animatable from "react-native-animatable";
+import { useDispatch } from 'react-redux';
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
-import type { SignInScreenProps } from "../../navigation/types";
 import { useNavigation } from "@react-navigation/native";
-import { supabase } from "../../lib/supabase";
 import Background from "../../components/Background";
+import { signinDriver } from "../../services/authService";
+import { setUser } from "../../store/slice/userSlice";
+import { setDriver } from "../../store/slice/driverSlice";
 
 const DriverSignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   // Password hide func
@@ -25,17 +28,17 @@ const DriverSignInScreen = () => {
   // Sign in func
   const signInWithEmail = async () => {
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    setLoading(false);
-
-    if (error) {
-      Alert.alert("Error", error.message);
-    } else {
+    try {
+      const { token, driverId, error } = await signinDriver(email, password);
+      if (error) {
+        throw new Error(error);
+      }
+      dispatch(setDriver({ id: driverId, token }));
       navigation.navigate("HomeScreen");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (

@@ -1,27 +1,21 @@
+import axios from 'axios';
 
+export const signupDriver = async (driverData) => {
+  try {
+    const response = await axios.post('http://192.168.0.35:3000/api/auth/signup/driver', driverData);
+    return { driverId: response.data.driverId, error: null };
+  } catch (error) {
+    console.error("Error signing up driver:", error);
+    return { driverId: null, error: error.message };
+  }
+};
 
-export const signUpAsUser = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            full_name: fullName,
-            role: 'user',  // Indicate that this is a user
-          }
-        }
-      });
-  
-      if (error) throw error;
-  
-      Alert.alert("Success", "Check your email for verification!");
-      navigation.navigate("UserSignInScreen");
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
+export const signinDriver = async (email, password) => {
+  try {
+    const response = await axios.post('http://192.168.0.35:3000/api/auth/signin/driver', { email, password });
+    return { token: response.data.token, driverId: response.data.driverId, error: null };
+  } catch (error) {
+    console.error("Error signing in driver:", error);
+    return { token: null, driverId: null, error: error.message };
+  }
+};
