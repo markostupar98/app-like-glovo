@@ -34,6 +34,7 @@ export const fetchRestaurantDetailsBasic = async (restaurantId) => {
 
 
 // Fetch complete details of a restaurant by ID including coordinates and address
+
 export const fetchRestaurantDetailsComplete = async (restaurantId) => {
   try {
     const response = await axios.get(`http://192.168.0.35:3000/api/restaurants/${restaurantId}/complete`);

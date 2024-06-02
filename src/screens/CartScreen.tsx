@@ -43,15 +43,16 @@ const CartScreen = () => {
     const loadDetails = async () => {
       setLoading(true);
       try {
-        const [restaurantResult, userProfileResult] = await Promise.all([
-          fetchRestaurantDetailsComplete(restaurantId),
-          fetchUserProfile(userId),
-        ]);
-  
-        if (restaurantResult.error || userProfileResult.error) {
-          throw new Error(restaurantResult.error || userProfileResult.error);
+        const restaurantResult = await fetchRestaurantDetailsComplete(restaurantId);
+        if (restaurantResult.error) {
+          throw new Error(restaurantResult.error);
         }
-  
+
+        const userProfileResult = await fetchUserProfile(userId);
+        if (userProfileResult.error) {
+          throw new Error(userProfileResult.error);
+        }
+
         const restaurant = restaurantResult.restaurant;
         const profile = userProfileResult.profile;
         if (restaurant && profile) {
@@ -61,7 +62,7 @@ const CartScreen = () => {
             restaurant.latitude,
             restaurant.longitude
           );
-  
+
           const { deliveryFee, deliveryTime } = calculateDelivery(distance);
           setUserProfile(profile);
           setRestaurant(restaurant);
@@ -76,7 +77,7 @@ const CartScreen = () => {
         setLoading(false);
       }
     };
-  
+
     loadDetails();
   }, [restaurantId, userId]);
 

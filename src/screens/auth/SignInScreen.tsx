@@ -8,9 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../store/slice/userSlice'; // import the action
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
-import type { SignInScreenProps } from "../../navigation/types";
 import { useNavigation } from "@react-navigation/native";
-import { supabase } from "../../lib/supabase";
 import Background from "../../components/Background";
 
 const SignInScreen = () => {
