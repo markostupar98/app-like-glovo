@@ -3,7 +3,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-const AllRestaurantsCard = ({ item }) => {
+const AllRestaurantsScreen = ({ item }) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -24,4 +24,4 @@ const AllRestaurantsCard = ({ item }) => {
   );
 };
 
-export default AllRestaurantsCard;
+export default AllRestaurantsScreen;

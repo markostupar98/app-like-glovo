@@ -16,3 +16,25 @@ export const createOrder = async (userId, restaurantId, deliveryAddress, cartIte
     throw error;
   }
 };
+
+// Fetch order details
+export const fetchOrderDetails = async (orderId) => {
+  try {
+    const response = await axios.get(`http://192.168.0.35:3000/api/orders/${orderId}`);
+    return { ...response.data, error: null };
+  } catch (error) {
+    console.error('Error fetching order details:', error);
+    return { error: error.message };
+  }
+};
+
+// Fetch orders
+export const fetchOrders = async () => {
+  try {
+    const response = await axios.get(`http://192.168.0.35:3000/api/orders`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    throw error;
+  }
+};
