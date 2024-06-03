@@ -16,9 +16,16 @@ import { fetchUserProfile, updateUserProfile } from "../../services/userService"
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser } from "../../store/slice/userSlice";
 
+interface RootState {
+  user: {
+    id: number;
+  };
+}
+
+
 const UserProfileScreen = () => {
   const navigation = useNavigation();
-  const userId = useSelector((state) => state.user.id); 
+  const userId = useSelector((state:RootState) => state.user.id); 
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
   const [location, setLocation] = useState(null);
@@ -56,7 +63,7 @@ const UserProfileScreen = () => {
   }
 
   // Location changing based on map press
-  const handleMapPress = async (event) => {
+  const handleMapPress = async (event:any) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
     setLocation({ latitude, longitude });
 

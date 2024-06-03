@@ -1,5 +1,5 @@
 // Function to calculate distance between two coordinates in km
-export function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+export function getDistanceFromLatLonInKm(lat1:number, lon1:number, lat2:number, lon2:number) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2 - lat1);
   var dLon = deg2rad(lon2 - lon1);
@@ -13,12 +13,12 @@ export function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return R * c; // Distance in km
 }
 
-function deg2rad(deg) {
+function deg2rad(deg:number) {
   return deg * (Math.PI / 180);
 }
 
 // Function to calculate delivery fee and time
-export function calculateDelivery(distance) {
+export function calculateDelivery(distance:number) {
   const baseFee = 5; // Base delivery fee in dollars
   const feePerKm = 1; // Additional fee per km
   const baseTime = 10; // Base delivery time in minutes

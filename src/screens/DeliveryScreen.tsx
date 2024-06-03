@@ -1,30 +1,81 @@
-import { View, Text, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { fetchRestaurantDetailsComplete } from "../services/restaurantService";
 import { fetchUserProfile } from "../services/userService";
-import { calculateDelivery, getDistanceFromLatLonInKm } from "../lib/deliveryFeeandTimeCalc";
+import {
+  calculateDelivery,
+  getDistanceFromLatLonInKm,
+} from "../lib/deliveryFeeandTimeCalc";
+import { fetchOrderDetails } from "../services/orderService";
+
+interface RouteParams {
+  restaurantId: string; 
+}
+interface UserProfile {
+  latitude: number;
+  longitude: number;
+  name: string;
+  description: string;
+}
+
+interface RootState {
+  user: {
+    id: number; 
+  };
+}
 
 const DeliveryScreen = () => {
   const route = useRoute();
-  const userId = useSelector((state) => state.user.id);  // Accessing user id from Redux store
-  const { restaurantId } = route.params;
-  const [userProfile, setUserProfile] = useState(null)
+  const userId = useSelector((state: RootState) => state.user.id); // Accessing user id from Redux store
+  const { restaurantId } = route.params as RouteParams;
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [orderDetails, setOrderDetails] = useState(null);
   const [restaurant, setRestaurant] = useState(null);
-  
+
   const [deliveryInfo, setDeliveryInfo] = useState({ fee: 0, time: 0 });
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState(null);  // State to store user profile
+  const [profile, setProfile] = useState(null); // State to store user profile
 
+  // Fetching order data
+  // useEffect(() => {
+  //   const loadOrderDetails = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const details = await fetchOrderDetails(orderId);
+  //       if (details.error) {
+  //         throw new Error(details.error);
+  //       }
+  //       setOrderDetails(details);
+  //     } catch (error) {
+  //       console.error("Error loading details:", error);
+  //       Alert.alert("Error", error.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadOrderDetails();
+  // }, [orderId]);
+  // Fetching restaurant and user data
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
       try {
-        const restaurantResult = await fetchRestaurantDetailsComplete(restaurantId);
+        const restaurantResult = await fetchRestaurantDetailsComplete(
+          restaurantId
+        );
         if (restaurantResult.error) {
           throw new Error(restaurantResult.error);
         }
@@ -51,7 +102,7 @@ const DeliveryScreen = () => {
         } else {
           throw new Error("Missing restaurant or user profile data");
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error loading details:", error);
         Alert.alert("Error", error.message);
       } finally {
@@ -94,7 +145,7 @@ const DeliveryScreen = () => {
         />
       </MapView>
       <View className="rounded-t-3xl -mt-12 bg-white relative">
-        <View className="flex-row justify-between px-5 pt-5">
+        <View className="flex-row justify-between px-2 pt-5">
           <View>
             <Text className="text-lg text-gray-500 font-semibold">
               Estimated Arrival
@@ -103,7 +154,7 @@ const DeliveryScreen = () => {
               In {deliveryInfo.time.toFixed(0)} minutes
             </Text>
             <Text className="mt-2 text-gray-600 font-semibold">
-              Your order is on the way!
+              Your order is waiting for driver to pick up
             </Text>
           </View>
           <Image
@@ -113,24 +164,24 @@ const DeliveryScreen = () => {
         </View>
         <View className="bg-emerald-400/100 p-2 flex-row justify-between items-center rounded-full my-5 mx-2">
           <View className="p-1 rounded-full bg-emerald-400/100">
-            <Image
+            {/* <Image
               className="h-16 w-16 rounded-full"
               source={require("../../assets/driver.jpeg")}
-            />
+            /> */}
           </View>
           <View className="flex-1 ml-3">
             <Text className="text-lg font-bold text-white">
-              Drajver Drajver
+              You will get notified when driver picks up your order
             </Text>
-            <Text className="text-lg font-bold text-white">
-              Your delivery driver
-            </Text>
+            {/* <Text className="text-lg font-bold text-white">
+              Your delivery driver - 
+            </Text> */}
           </View>
           <View className="flex-row items-center space-x-3 mr-3">
-            <TouchableOpacity className="bg-white p-2 rounded-full">
-              <AntDesign name="phone" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>navigation.navigate('HomeScreen')} className="bg-white p-2 rounded-full">
+            <TouchableOpacity
+              onPress={() => navigation.navigate("HomeScreen")}
+              className="bg-white p-2 rounded-full"
+            >
               <Ionicons name="exit-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>

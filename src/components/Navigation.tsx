@@ -18,12 +18,30 @@ import UserProfileScreen from "../screens/auth/UserProfileScreen";
 import DriverHomeScreen from "../screens/DriverHomeScreen";
 import OrderDetailsScreen from "../screens/OrderDetailsScreen";
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  WelcomeScreen: undefined;
+  SignInScreen: undefined;
+  SignUpScreen: undefined;
+  DriverSignInScreen: undefined;
+  DriverSignUpScreen: undefined;
+  HomeScreen: undefined;
+  RestaurantScreen: undefined;
+  AllRestaurantsScreen: undefined;
+  CartScreen: undefined;
+  OrderPrepScreen: undefined;
+  DeliveryScreen: undefined;
+  UserProfileScreen: undefined;
+  DriverHomeScreen: undefined;
+  OrderDetailsScreen: undefined;
+};
+
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Navigation = () => {
   // Check if driver or user is logged in
-  const isUserLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const isDriverLoggedIn = useSelector((state) => state.driver.isLoggedIn);
+  const isUserLoggedIn = useSelector((state:any) => state.user.isLoggedIn);
+  const isDriverLoggedIn = useSelector((state:any) => state.driver.isLoggedIn);
 
   return (
     <NavigationContainer>

@@ -1,7 +1,18 @@
 import { View, Text, FlatList, Pressable, Image } from "react-native";
 import React from "react";
 
-const Categories = ({ categories }) => {
+// Defining props
+interface CategoryItem {
+  id: number;  
+  image: string;  
+  name: string; 
+}
+
+interface CategoriesProps {
+  categories: CategoryItem[]; 
+}
+
+const Categories = ({ categories }:{categories:CategoriesProps}) => {
   return (
     <View className="mt-5 w-full">
       <Text className="text-xl ml-2 text-neutral-500 font-semibold">

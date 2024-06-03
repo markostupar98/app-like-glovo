@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getRestaurants = async () => {
   try {
-    const response = await axios.get('http://192.168.0.35:3000/api/restaurants');
+    const response = await axios.get('http://192.168.1.224:3000/api/restaurants');
     const data = response.data;
 
     // Map the data if needed or use it directly
@@ -21,7 +21,7 @@ export const getRestaurants = async () => {
 // Fetch basic details of a restaurant by ID
 export const fetchRestaurantDetailsBasic = async (restaurantId) => {
   try {
-    const response = await axios.get(`http://192.168.0.35:3000/api/restaurants/${restaurantId}`);
+    const response = await axios.get(`http://192.168.1.224:3000/api/restaurants/${restaurantId}`);
     if (!response.data) {
       return { restaurant: null, dishes: [], error: "Restaurant not found" };
     }
@@ -37,7 +37,7 @@ export const fetchRestaurantDetailsBasic = async (restaurantId) => {
 
 export const fetchRestaurantDetailsComplete = async (restaurantId) => {
   try {
-    const response = await axios.get(`http://192.168.0.35:3000/api/restaurants/${restaurantId}/complete`);
+    const response = await axios.get(`http://192.168.1.224:3000/api/restaurants/${restaurantId}/complete`);
     if (!response.data) {
       return { restaurant: null, dishes: [], error: "Restaurant not found" };
     }

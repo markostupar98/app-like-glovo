@@ -15,9 +15,6 @@ const Search = () => {
           <Text className="text-gray-600">Banja Luka,RS</Text>
         </View>
       </View>
-      <View className="p-3 rounded-full">
-        <Feather name="sliders" size={24} color="black" />
-      </View>
     </View>
   );
 };

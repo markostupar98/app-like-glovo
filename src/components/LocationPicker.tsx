@@ -3,10 +3,20 @@ import React, { useState } from 'react';
 import { View, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-const LocationPicker = ({ onSave }) => {
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+// Definiranje propsa za komponentu
+interface LocationPickerProps {
+  onSave: (location: Location) => void;
+}
+
+const LocationPicker = ({ onSave }:LocationPickerProps) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-  const handleMapPress = (event) => {
+  const handleMapPress = (event:any) => {
     setSelectedLocation({
       latitude: event.nativeEvent.coordinate.latitude,
       longitude: event.nativeEvent.coordinate.longitude,

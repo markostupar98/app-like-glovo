@@ -10,6 +10,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Button } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import Background from "../../components/Background";
+import { registerForPushNotificationsAsync } from "../../lib/notification";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
@@ -26,28 +27,60 @@ const SignInScreen = () => {
   };
 
   // Sign in func
+// const signInWithEmail = async () => {
+//   setLoading(true);
+//   try {
+//     const response = await axios.post('http://192.168.1.224:3000/api/auth/signin', {
+//       email,
+//       password,
+//     });
+//     const { token, userId } = response.data;  // Pretpostavimo da backend šalje ovo
+
+//     setLoading(false);
+
+//     if (response.data) {
+//       dispatch(setUser({ id: userId, token: token }));
+//       navigation.navigate("HomeScreen");
+//     } else {
+//       Alert.alert("Login Failed", "Invalid credentials");
+//     }
+//   } catch (error) {
+//     setLoading(false);
+//     Alert.alert("Error", error.message);
+//   }
+// };
+
 const signInWithEmail = async () => {
   setLoading(true);
   try {
-    const response = await axios.post('http://192.168.0.35:3000/api/auth/signin', {
+    const response = await axios.post('http://192.168.1.224:3000/api/auth/signin', {
       email,
       password,
     });
     const { token, userId } = response.data;  // Pretpostavimo da backend šalje ovo
 
-    setLoading(false);
-
     if (response.data) {
+      const pushToken = await registerForPushNotificationsAsync();
+      
+      if (pushToken) {
+        await axios.post('http://192.168.1.224:3000/api/save-token', {
+          token: pushToken,
+          userId: userId,
+        });
+      }
+
       dispatch(setUser({ id: userId, token: token }));
       navigation.navigate("HomeScreen");
     } else {
       Alert.alert("Login Failed", "Invalid credentials");
     }
-  } catch (error) {
-    setLoading(false);
+  } catch (error:any) {
     Alert.alert("Error", error.message);
+  } finally {
+    setLoading(false);
   }
 };
+
   return (
     <Background>
       <View className="flex-1">

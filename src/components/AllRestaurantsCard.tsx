@@ -2,9 +2,16 @@ import { View, Text, TouchableWithoutFeedback, Image } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import Header from "./Header";
 
-const AllRestaurantsCard = ({ item }) => {
+
+interface RestaurantItem {
+  image: string;
+  name: string;
+  categoryName: string;
+  address: string;
+}
+
+const AllRestaurantsCard = ({ item }:{item:RestaurantItem}) => {
   const navigation = useNavigation();
   return (
     <>

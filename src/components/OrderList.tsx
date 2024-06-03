@@ -5,10 +5,25 @@ import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { assignDriverToOrder } from "../services/orderService";
+import { Restaurants, User } from "../types";
 
-const OrderList = ({ restaurant, user, orderId }) => {
+interface OrderListProps {
+  restaurant: Restaurants;
+  user: User;
+  orderId: number;
+}
+
+
+// Interface for Redux state
+interface RootState {
+  driver: {
+    id: number;
+  };
+}
+
+const OrderList = ({ restaurant, user, orderId }:OrderListProps) => {
   const navigation = useNavigation();
-  const driverId = useSelector((state) => state.driver.id); // Pretpostavljamo da je driver ID u Redux store-u
+  const driverId = useSelector((state:RootState) => state.driver.id); // Pretpostavljamo da je driver ID u Redux store-u
 
   // Assiging driver to specific order
   const handleTakeOrder = async () => {

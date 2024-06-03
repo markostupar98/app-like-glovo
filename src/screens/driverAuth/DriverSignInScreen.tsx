@@ -11,6 +11,8 @@ import Background from "../../components/Background";
 import { signinDriver } from "../../services/authService";
 import { setUser } from "../../store/slice/userSlice";
 import { setDriver } from "../../store/slice/driverSlice";
+import axios from "axios";
+import { registerForPushNotificationsAsync } from "../../lib/notification";
 
 const DriverSignInScreen = () => {
   const [email, setEmail] = useState("");
@@ -26,6 +28,22 @@ const DriverSignInScreen = () => {
   };
 
   // Sign in func
+  // const signInWithEmail = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const { token, driverId, error } = await signinDriver(email, password);
+  //     if (error) {
+  //       throw new Error(error);
+  //     }
+  //     dispatch(setDriver({ id: driverId, token }));
+  //     navigation.navigate("HomeScreen");
+  //   } catch (error) {
+  //     Alert.alert("Error", error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const signInWithEmail = async () => {
     setLoading(true);
     try {
@@ -33,6 +51,16 @@ const DriverSignInScreen = () => {
       if (error) {
         throw new Error(error);
       }
+
+      const pushToken = await registerForPushNotificationsAsync();
+      
+      if (pushToken) {
+        await axios.post('http://192.168.1.224:3000/api/save-driver-token', {
+          token: pushToken,
+          driverId: driverId,
+        });
+      }
+
       dispatch(setDriver({ id: driverId, token }));
       navigation.navigate("HomeScreen");
     } catch (error) {

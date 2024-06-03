@@ -2,11 +2,11 @@ import { View, Text, Image, ImageBackground } from "react-native";
 import React from "react";
 import Swiper from "react-native-swiper";
 import { Button } from "@rneui/themed";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { WelcomeScreenProps } from "../../navigation/types";
 import Background from "../../components/Background";
+import { useNavigation } from "@react-navigation/native";
 
-const Welcome = ({ navigation }: WelcomeScreenProps) => {
+const Welcome = () => {
+  const navigation = useNavigation()
   return (
     <Background>
       <View className="flex-1 justify-start pt-[60px] items-center">

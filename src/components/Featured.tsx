@@ -3,8 +3,14 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React from 'react';
 import RestaurantCard from "./RestaurantCard";
 import { useNavigation } from '@react-navigation/native';
+import { Restaurants } from "../types";
 
-const Featured = ({ name, featuredRestaurants }) => {
+interface FeaturedProps {
+  name: string;
+  featuredRestaurants: Restaurants[];
+}
+
+const Featured = ({ name, featuredRestaurants }:FeaturedProps) => {
   const navigation = useNavigation();
 
   const handleSeeAllPress = () => {

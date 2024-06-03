@@ -29,7 +29,7 @@ const SignUpScreen = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.35:3000/api/auth/signup",
+        "http://192.168.1.224:3000/api/auth/signup",
         {
           email: email,
           password: password,
@@ -52,7 +52,7 @@ const SignUpScreen = () => {
       } else {
         throw new Error(response.data.message || "Something went wrong");
       }
-    } catch (error) {
+    } catch (error:any) {
       setLoading(false);
       Alert.alert(
         "Error",

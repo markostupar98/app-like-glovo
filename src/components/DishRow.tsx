@@ -4,15 +4,45 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, updateItemQuantity } from "../store/slice/cartSlice";
 
-const DishRow = ({ item }) => {
+// Defining types
+// Definisanje interfejsa za item
+interface DishItem {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  categoryName?: string; // Pretpostavljam da je ovo opcionalno
+}
+
+// Definisanje propertija za DishRow komponentu
+interface DishRowProps {
+  item: DishItem;
+}
+
+// Definisanje tipa za Redux state
+interface RootState {
+  cart: {
+    items: CartItem[];
+  };
+}
+
+interface CartItem {
+  id: number;
+  quantity: number;
+  name?: string;
+  price?: number;
+}
+
+
+const DishRow = ({ item }:DishRowProps) => {
   const dispatch = useDispatch();
-  const cartItem = useSelector(state => state.cart.items.find(cartItem => cartItem.id === item.id));
+  const cartItem = useSelector((state:RootState) => state.cart.items.find(cartItem => cartItem.id === item.id));
 
   const handleAddToCart = () => {
     dispatch(addItem({ id: item.id, name: item.name, price: item.price, quantity: 1 }));
   };
 
-  const handleUpdateQuantity = (quantity) => {
+  const handleUpdateQuantity = (quantity:number) => {
     dispatch(updateItemQuantity({ id: item.id, quantity }));
   };
 
